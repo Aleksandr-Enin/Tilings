@@ -75,6 +75,7 @@ public class Tiling {
 
     boolean isCorrectChange(int i, int j, int heightDifference) {
         if (isOutOfBorder(i, j)) return false;
+        if (lattice[i+1][j+1] - lattice[i-1][j-1] > 1) return false;
         if (lattice[i][j] + heightDifference > lattice[i+1][j] || lattice[i][j] + heightDifference > lattice[i][j+1]
                 || lattice[i][j] + heightDifference > lattice[i+1][j+1]) return false;
         else if (lattice[i][j] + heightDifference < lattice[i-1][j] || lattice[i][j] + heightDifference < lattice[i][j-1]
