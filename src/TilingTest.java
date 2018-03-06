@@ -1,14 +1,23 @@
+import java.io.FileWriter;
+import java.io.PrintWriter;
+
 import static org.junit.Assert.*;
 
 public class TilingTest {
     @org.junit.Test
     public void metropolis() throws Exception {
-        Tiling tiling = new Tiling(30);
-        tiling.setTemp(10000);
+        int n = 40;
+        int m = n;
+        Tiling tiling = new Tiling(n);
+        tiling.setTemp(n/5*2);
+        LozengePlot.saveImage(tiling.to3dLattice(tiling.lattice), "initial");
         System.out.println(tiling);
-        tiling.metropolis(10000000);
+        tiling.metropolis(1000000);
         int[][] t = tiling.to3dLattice(tiling.getAverageConfiguration());
+        LozengePlot.saveImage(tiling.to3dLattice(tiling.getAverageConfiguration()), "final");
         System.out.println(tiling);
+
+        double[][] correlators = tiling.correlators;
         for (int i =0 ; i < t.length; i++) {
             for (int j = 0; j < t.length; j++) {
                 System.out.print(t[i][j] + " ");
@@ -16,6 +25,15 @@ public class TilingTest {
             }
             System.out.println();
         }
+        FileWriter fileWriter = new FileWriter("correlators/" + tiling.n + "_" + tiling.T + "_" + "Corelators.dat");
+        PrintWriter printWriter = new PrintWriter(fileWriter);
+        for (int i = n/4; i < (3*tiling.n)/4; i++) {
+                printWriter.println(tiling.correlators[i][m]);
+            printWriter.println();
+        }
+        printWriter.close();
+
+
     }
 
 }

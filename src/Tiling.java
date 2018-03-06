@@ -27,18 +27,6 @@ public class Tiling {
         return result;
     }
 
-
-    public int[][] getCorrelations() {
-        int [][] t = new int[correlators.length][];
-        for (int i = 0; i < correlators.length; i++) {
-            t[i] = new int[correlators[i].length];
-            for (int j = 0; j < t.length; j++) {
-                t[i][j] = (int) (correlators[i][j]*20);
-            }
-        }
-        return t;
-    }
-
     private int[][] arrayToInt(double [][] array) {
         int [][] t = new int[array.length][];
         for (int i = 0; i < array.length; i++) {
