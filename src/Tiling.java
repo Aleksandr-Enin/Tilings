@@ -13,7 +13,7 @@ public class Tiling {
         return arrayToInt(averageConfiguration);
     }
 
-    public int[][] to3dLattice() {
+    public int[][] to3dLattice(int lattice[][]) {
         int [][] result = new int[n][n];
         for (int i = 0; i<2*n; i++) {
             for (int j = 0; j<2*n; j++) {
@@ -55,7 +55,6 @@ public class Tiling {
         lattice = new int[2*n+1][2*n+1];
         random = new Random();
         initializeLattice();
-        System.out.println(this);
     }
 
     public void setTemp(double T)
@@ -166,6 +165,7 @@ public class Tiling {
         for (int i=0;i<2*n+1;i++) {
             for (int j =0; j<2*n+1;j++) {
                 result += lattice[i][j] + " ";
+                if (lattice[i][j] < 10) result+= " ";
             }
             result += "\n";
         }
