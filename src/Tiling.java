@@ -1,11 +1,15 @@
+import java.io.Serializable;
 import java.util.Random;
 
-public class Tiling {
+public class Tiling implements Serializable{
     int n = 30;
     int[][] lattice;
     double[][] averageConfiguration;
     double[][] correlators;
     double T = 10;
+    double energy = 0;
+    double averageEnergy = 0;
+    double averageEnergySquared = 0;
 
     Random random;
 
@@ -97,6 +101,7 @@ public class Tiling {
         } while (!isCorrectChange(i,j,heightDifference));
         if (random.nextDouble() < Math.exp(heightDifference/T)) {
             lattice[i][j]+= heightDifference;
+            energy += heightDifference;
         }
     }
 
@@ -119,6 +124,7 @@ public class Tiling {
     }
 
     private void initializeSample() {
+        energy = 0;
         averageConfiguration = new double[2*n+1][2*n+1];
         correlators = new double[2*n+1][2*n+1];
     }
@@ -132,6 +138,8 @@ public class Tiling {
                 correlators[i][j] += lattice[n][n] * lattice[i][j];
             }
         }
+        averageEnergy += energy/(n*n);
+        averageEnergySquared += energy*energy/(n*n*n*n);
     }
 
     private void finalizeSample(int iterations) {
@@ -147,7 +155,14 @@ public class Tiling {
                 correlators[i][j] -= averageConfiguration[i][j] * averageConfiguration[n][n];
             }
         }
+        averageEnergy /= iterations;
+        averageEnergySquared /= iterations;
     }
+
+    public double capacity() {
+        return this.averageEnergySquared - this.averageEnergy*this.averageEnergy;
+    }
+
     public String toString() {
         String result = "";
         for (int i=0;i<2*n+1;i++) {
