@@ -22,13 +22,27 @@ public class FreeEnergy {
         tilings.parallelStream().forEach(tiling -> tiling.metropolis(100000));
         entropy = tilings.get(0).capacity()/(2*tilings.get(0).T);
         for (int i = 1; i < iterations; i++)
-            entropy += tilings.get(i).capacity()/tilings.get(i).T;
-        entropy += tilings.get(iterations).capacity()/t/2;
+            entropy += tilings.get(i).capacity()/(tilings.get(i).T);
+        entropy += tilings.get(iterations).capacity()/(2*t);
 
-        Tiling.saveOutput(tilings, "Free Energy_" + "test");
-        Tiling.saveTilings(tilings, "Free Energy_" + n);
+        TilingOutput.saveOutput(tilings, "");
+        TilingOutput.saveTilings(tilings, "Free Energy_" + n);
 
 
-        return tilings.get(iterations).averageEnergy - t*t*entropy/(iterations+1);
+        return tilings.get(iterations).averageEnergy - t*entropy/(iterations+1);
+    }
+
+
+
+    public static ArrayList<Double> freeEnergies(ArrayList<Tiling> tilings) {
+        double entropy;
+        ArrayList<Double> freeEnergies = new ArrayList<>();
+        entropy = tilings.get(0).capacity()/(2*tilings.get(0).T);
+        for (int i = 1; i < tilings.size(); i++) {
+            Tiling tiling = tilings.get(i);
+            freeEnergies.add(tiling.averageEnergy - (tiling.T * entropy + tiling.capacity() / 2)*tiling.T / (i + 1));
+            entropy += tiling.capacity() / tiling.T;
+        }
+        return freeEnergies;
     }
 }
