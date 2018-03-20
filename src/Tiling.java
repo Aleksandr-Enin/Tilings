@@ -1,4 +1,5 @@
-import java.io.Serializable;
+import java.io.*;
+import java.util.ArrayList;
 import java.util.Random;
 
 public class Tiling implements Serializable{
@@ -99,7 +100,7 @@ public class Tiling implements Serializable{
             i = random.nextInt(2*n+1);
             j = random.nextInt(2*n+1);
         } while (!isCorrectChange(i,j,heightDifference));
-        if (random.nextDouble() < Math.exp(heightDifference/T)) {
+        if (random.nextDouble() < Math.exp(-heightDifference/T)) {
             lattice[i][j]+= heightDifference;
             energy += heightDifference;
         }
@@ -138,8 +139,8 @@ public class Tiling implements Serializable{
                 correlators[i][j] += lattice[n][n] * lattice[i][j];
             }
         }
-        averageEnergy += energy/(n*n);
-        averageEnergySquared += energy*energy/(n*n*n*n);
+        averageEnergy += energy;
+        averageEnergySquared += energy*energy;
     }
 
     private void finalizeSample(int iterations) {
@@ -161,6 +162,47 @@ public class Tiling implements Serializable{
 
     public double capacity() {
         return this.averageEnergySquared - this.averageEnergy*this.averageEnergy;
+    }
+
+    public static void saveOutput(ArrayList<Tiling> tilings, String prefix) {
+        int n = tilings.get(0).n;
+        try {
+            PrintWriter energyWriter = new PrintWriter(new FileWriter("energy/" +prefix + n));
+
+            for (Tiling tiling : tilings) {
+                FileWriter fileWriter = new FileWriter("correlators/" + prefix + tiling.n + "_" + tiling.T + "_" + "Corelators.dat");
+                PrintWriter printWriter = new PrintWriter(fileWriter);
+                for (int i = n / 4; i < 3 * n / 4; i++) {
+                    printWriter.println(tiling.correlators[i][n]);
+                }
+                printWriter.close();
+                energyWriter.println(tiling.T + " " + tiling.averageEnergy + tiling.capacity() + tiling.averageEnergySquared);
+            }
+            energyWriter.close();
+        }
+        catch (Exception ex) {
+
+        }
+    }
+
+    public static void saveTilings(ArrayList<Tiling> tilings, String filename) {
+        try {
+            FileOutputStream fos = new FileOutputStream(filename);
+            ObjectOutputStream oos = new ObjectOutputStream(fos);
+            oos.writeObject(tilings);
+            oos.close();
+            fos.close();
+        }
+        catch(Exception ex) {
+
+        }
+    }
+
+    public static ArrayList<Tiling> readTilings(String filename) throws Exception {
+        FileInputStream fileInput = new FileInputStream("filename");
+        ObjectInputStream objectInputStream = new ObjectInputStream(fileInput);
+        ArrayList<Tiling> tilings = (ArrayList<Tiling>) objectInputStream.readObject();
+        return tilings;
     }
 
     public String toString() {
