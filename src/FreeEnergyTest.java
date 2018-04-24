@@ -50,21 +50,23 @@ public class FreeEnergyTest {
 
     @Test
     public void freeEnergyAll() throws Exception {
-        ArrayList<ArrayList<Tiling>> tilings = new ArrayList<>();
-        ArrayList<ArrayList<Double>> freeEnergies = new ArrayList<>();
+        FileWriter scalingFileWriter = new FileWriter("scaling.dat");
+        PrintWriter scalingPrintWriter = new PrintWriter(scalingFileWriter);
         for (int n = 4; n <= 42; n+=2) {
-            ArrayList<Tiling> tiling = TilingOutput.readTilings("Free Energy_"+n);
-            tilings.add(tiling);
-            ArrayList<Double> tilingFreeEnergy = FreeEnergy.freeEnergies(tiling);
-            freeEnergies.add(tilingFreeEnergy);
-            System.out.println(n);
+            ArrayList<Tiling> tilings = TilingOutput.readTilings("Free Energy_"+n);
+            ArrayList<Double> FreeEnergies = FreeEnergy.freeEnergies(tilings);
+            //System.out.println(n);
             FileWriter fileWriter = new FileWriter("freeEnergies/" + n +".dat");
             PrintWriter printWriter = new PrintWriter(fileWriter);
-            for (int k = 0; k < tilingFreeEnergy.size(); k++) {
-                printWriter.println(tiling.get(k+1).T + " " + tilingFreeEnergy.get(k)/(n*n));
+            for (int k = 0; k < FreeEnergies.size(); k++) {
+                printWriter.println(tilings.get(k+1).T + " " + FreeEnergies.get(k)/(n*n));
+                if (Math.abs(tilings.get(k+1).T - n) < 0.2) {
+                    System.out.println(n);
+                    scalingPrintWriter.println(1/tilings.get(k+1).T + " " + FreeEnergies.get(k)/(-tilings.get(k+1).T*n*n));
+                }
             }
             printWriter.close();
         }
-
+        scalingPrintWriter.close();
     }
 }
