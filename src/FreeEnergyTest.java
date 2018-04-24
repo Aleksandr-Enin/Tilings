@@ -4,6 +4,7 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.ObjectInputStream;
 import java.io.PrintWriter;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import static org.junit.Assert.*;
@@ -40,7 +41,7 @@ public class FreeEnergyTest {
 
     @Test
     public void freeEnergy() throws Exception {
-        for (int n = 4; n <= 40; n+=2) {
+        for (int n = 36; n <= 50; n+=2) {
             FreeEnergy.generateTilings(n, 2*n, 200);
             System.out.println(n);
         }
@@ -49,11 +50,21 @@ public class FreeEnergyTest {
 
     @Test
     public void freeEnergyAll() throws Exception {
-        ArrayList<Tiling> tilings = TilingOutput.readTilings("Free Energy_4");
-        ArrayList<Double> freeEnergies = FreeEnergy.freeEnergies(tilings);
-        for (double freeEnergy: freeEnergies) {
-            System.out.println(freeEnergy);
+        ArrayList<ArrayList<Tiling>> tilings = new ArrayList<>();
+        ArrayList<ArrayList<Double>> freeEnergies = new ArrayList<>();
+        for (int n = 4; n <= 42; n+=2) {
+            ArrayList<Tiling> tiling = TilingOutput.readTilings("Free Energy_"+n);
+            tilings.add(tiling);
+            ArrayList<Double> tilingFreeEnergy = FreeEnergy.freeEnergies(tiling);
+            freeEnergies.add(tilingFreeEnergy);
+            System.out.println(n);
+            FileWriter fileWriter = new FileWriter("freeEnergies/" + n +".dat");
+            PrintWriter printWriter = new PrintWriter(fileWriter);
+            for (int k = 0; k < tilingFreeEnergy.size(); k++) {
+                printWriter.println(tiling.get(k+1).T + " " + tilingFreeEnergy.get(k)/(n*n));
+            }
+            printWriter.close();
         }
-    }
 
+    }
 }
