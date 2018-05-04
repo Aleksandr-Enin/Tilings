@@ -38,11 +38,18 @@ public class TilingTest {
 
     @org.junit.Test
     public void test() throws Exception {
+        Tiling oldTiling = new Tiling(25);
+        oldTiling.setTemp(20);
         CorrectTiling tiling = new CorrectTiling(25);
         tiling.setTemp(20);
         LozengePlot.saveImage(tiling.to3dLattice(tiling.lattice), "correctInitial");
         tiling.metropolis(1000000);
+        System.out.println("DONE");
+        oldTiling.metropolis(1000000);
         LozengePlot.saveImage(tiling.to3dLattice(tiling.getAverageConfiguration()), "correctFinal");
+        LozengePlot.saveImage(oldTiling.to3dLattice(oldTiling.getAverageConfiguration()), "final");
+        System.out.println(oldTiling.averageEnergy + " " + oldTiling.averageEnergySquared + " " + oldTiling.capacity()/(25.0*25.0));
+        System.out.println(tiling.averageEnergy + " " + oldTiling.averageEnergySquared + " " + oldTiling.capacity()/(25.0*25.0));
     }
 
 }

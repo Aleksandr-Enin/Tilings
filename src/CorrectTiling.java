@@ -108,8 +108,8 @@ public class CorrectTiling implements Serializable{
     int locallyFlippabe(int i, int j, int heightDifference) {
         lattice[i][j] += heightDifference;
         int count = 0;
-        for (int l = -4; l<=4; l++) {
-            for (int m = -4; m <=4; m++) {
+        for (int l = -2; l<=2; l++) {
+            for (int m = -2; m <=2; m++) {
                 if (isCorrectChange(i+l,j+m,1)) count++;
                 if (isCorrectChange(i+l,j+m,-1)) count++;
             }
@@ -130,14 +130,25 @@ public class CorrectTiling implements Serializable{
         } while (!isCorrectChange(i,j,heightDifference));
         int locallyFlippable = locallyFlippabe(i,j,0);
         int newFlippable = locallyFlippabe(i,j,heightDifference) - locallyFlippable + flippable;
-/*        ArrayList<int[]> flippable = generateFlippable();
-        int [] state = flippable.get(random.nextInt(flippable.size()));
-        lattice[state[0]][state[1]] += state[2];
-        ArrayList<int[]> flippableBack = generateFlippable();*/
+
         if (random.nextDouble() < newFlippable*Math.exp(-heightDifference/T)/flippable) {
             lattice[i][j]+= heightDifference;
             energy += heightDifference;
             flippable = newFlippable;
+        }
+    }
+
+    void honestChangeConfiguration()
+    {
+        ArrayList<int[]> flippable = generateFlippable();
+        int [] state = flippable.get(random.nextInt(flippable.size()));
+        lattice[state[0]][state[1]] += state[2];
+        ArrayList<int[]> flippableBack = generateFlippable();
+        if (random.nextDouble() < flippableBack.size()*Math.exp(-state[2]/T)/flippable.size()) {
+            energy += state[2];
+        }
+        else {
+            lattice[state[0]][state[1]]-= state[2];
         }
     }
 
@@ -148,12 +159,14 @@ public class CorrectTiling implements Serializable{
         flippable = 1;
         for (int t =0; t < n*n*n*100; t++) {
             changeConfiguration();
+            //honestChangeConfiguration();
         }
         System.out.println("thermalization done") ;
         for (int k = 0; k < iterations; k++)
         {
             for (int t =0; t < 100; t++) {
                 changeConfiguration();
+                //honestChangeConfiguration();
             }
             sample();
         }
