@@ -6,10 +6,10 @@ import static org.junit.Assert.*;
 public class TilingTest {
     @org.junit.Test
     public void metropolis() throws Exception {
-        int n = 40;
+        int n = 25;
         int m = n;
         Tiling tiling = new Tiling(n);
-        tiling.setTemp(n/5*2);
+        tiling.setTemp(10000);
         LozengePlot.saveImage(tiling.to3dLattice(tiling.lattice), "initial");
         System.out.println(tiling);
         tiling.metropolis(1000000);
@@ -34,6 +34,15 @@ public class TilingTest {
         printWriter.close();
 
 
+    }
+
+    @org.junit.Test
+    public void test() throws Exception {
+        CorrectTiling tiling = new CorrectTiling(25);
+        tiling.setTemp(20);
+        LozengePlot.saveImage(tiling.to3dLattice(tiling.lattice), "correctInitial");
+        tiling.metropolis(1000000);
+        LozengePlot.saveImage(tiling.to3dLattice(tiling.getAverageConfiguration()), "correctFinal");
     }
 
 }
