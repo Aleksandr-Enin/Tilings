@@ -16,10 +16,10 @@ public class FreeEnergyTest {
 
         FileInputStream fileInput = new FileInputStream("Free Energy");
         ObjectInputStream objectInputStream = new ObjectInputStream(fileInput);
-        int n = 20;
-        ArrayList<Tiling> tilings = (ArrayList<Tiling>) objectInputStream.readObject();
+        int n = 26;
+        ArrayList<Tiling> tilings = TilingOutput.readTilings("Free Energy_10");
         try {
-            PrintWriter energyWriter = new PrintWriter(new FileWriter("energy/" + n));
+            PrintWriter energyWriter = new PrintWriter(new FileWriter("energy/" + 10));
 
             for (Tiling tiling : tilings) {
             /*    FileWriter fileWriter = new FileWriter("correlators/"  + tiling.n + "_" + tiling.T + "_" + "Corelators.dat");
@@ -60,13 +60,38 @@ public class FreeEnergyTest {
             PrintWriter printWriter = new PrintWriter(fileWriter);
             for (int k = 0; k < FreeEnergies.size(); k++) {
                 printWriter.println(tilings.get(k+1).T + " " + FreeEnergies.get(k)/(n*n));
-                if (Math.abs(tilings.get(k+1).T - n) < 0.2) {
+                if (Math.abs(tilings.get(k+1).T - 0.4*n) < 0.2) {
                     System.out.println(n);
-                    scalingPrintWriter.println(1/tilings.get(k+1).T + " " + FreeEnergies.get(k)/(-tilings.get(k+1).T*n*n));
+                    scalingPrintWriter.println(1.0/n + " " + FreeEnergies.get(k)/(-tilings.get(k+1).T*n*n));
                 }
             }
             printWriter.close();
         }
         scalingPrintWriter.close();
+    }
+
+    @Test
+    public void entropy() throws Exception {
+        ArrayList<Tiling> tilings = TilingOutput.readTilings("Free Energy_4");
+        FileWriter fileWriter = new FileWriter("energy/entryopy_4.dat");
+        PrintWriter printWriter = new PrintWriter(fileWriter);
+        ArrayList<Double> entropy = FreeEnergy.entropy(tilings);
+        for (int i = 0; i< tilings.size()-1; i++) {
+            printWriter.println(tilings.get(i+1).T + " " + entropy.get(i));
+        }
+        printWriter.close();
+
+    }
+
+    @Test
+    public void generateFreeEnergy() throws Exception {
+        ArrayList<Tiling> tilings = TilingOutput.readTilings("Free Energy_4");
+        FileWriter fileWriter = new FileWriter("energy/Free Energy_4.dat");
+        PrintWriter printWriter = new PrintWriter(fileWriter);
+        ArrayList<Double> energies = FreeEnergy.freeEnergies(tilings);
+        for (int i = 0;i < tilings.size()-1; i++) {
+            printWriter.println(tilings.get(i+1).T + " " + energies.get(i));
+        }
+        printWriter.close();
     }
 }

@@ -1,3 +1,5 @@
+import org.junit.Test;
+
 import java.io.FileWriter;
 import java.io.PrintWriter;
 
@@ -50,6 +52,19 @@ public class TilingTest {
         LozengePlot.saveImage(oldTiling.to3dLattice(oldTiling.getAverageConfiguration()), "final");
         System.out.println(oldTiling.averageEnergy + " " + oldTiling.averageEnergySquared + " " + oldTiling.capacity()/(25.0*25.0));
         System.out.println(tiling.averageEnergy + " " + oldTiling.averageEnergySquared + " " + oldTiling.capacity()/(25.0*25.0));
+    }
+
+    @Test
+    public void generateCapacity() throws Exception {
+        Tiling tiling = new Tiling(10);
+        PrintWriter energyWriter = new PrintWriter(new FileWriter("energy/" + 10));
+        for (double t =  0.5; t<10; t+=0.5) {
+            tiling.setTemp(t);
+            tiling.metropolis(100000);
+            energyWriter.println(t + " " + tiling.capacity());
+        }
+        energyWriter.close();
+
     }
 
 }

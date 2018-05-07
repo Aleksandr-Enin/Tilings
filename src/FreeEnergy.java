@@ -25,6 +25,17 @@ public class FreeEnergy {
         TilingOutput.saveTilings(tilings, "Free Energy_" + n);
     }
 
+    public static ArrayList<Double> entropy(ArrayList<Tiling> tilings) {
+        double e;
+        ArrayList<Double> entropy = new ArrayList<>();
+        e = tilings.get(0).capacity()/(2*tilings.get(0).T);
+        for (int i = 1; i < tilings.size(); i++) {
+            Tiling tiling = tilings.get(i);
+            entropy.add((tiling.T * e + tiling.capacity() / 2) / (i + 1));
+            e += tiling.capacity() / tiling.T;
+        }
+        return entropy;
+    }
 
     public static ArrayList<Double> freeEnergies(ArrayList<Tiling> tilings) {
         double entropy;
