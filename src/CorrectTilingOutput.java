@@ -1,13 +1,13 @@
 import java.io.*;
 import java.util.ArrayList;
 
-public class TilingOutput {
-    public static void saveOutput(ArrayList<Tiling> tilings, String prefix) {
+public class CorrectTilingOutput {
+    public static void saveOutput(ArrayList<CorrectTiling> tilings, String prefix) {
         int n = tilings.get(0).n;
         try {
             PrintWriter energyWriter = new PrintWriter(new FileWriter("energy/" +prefix + n));
 
-            for (Tiling tiling : tilings) {
+            for (CorrectTiling tiling : tilings) {
                 FileWriter fileWriter = new FileWriter("correlators/" + prefix + tiling.n + "_" + tiling.T + "_" + "Corelators.dat");
                 PrintWriter printWriter = new PrintWriter(fileWriter);
                 for (int i = n / 4; i < 3 * n / 4; i++) {
@@ -49,10 +49,10 @@ public class TilingOutput {
         }
     }
 
-    public static ArrayList<Tiling> readTilings(String filename) throws Exception {
+    public static ArrayList<CorrectTiling> readTilings(String filename) throws Exception {
         FileInputStream fileInput = new FileInputStream(filename);
         ObjectInputStream objectInputStream = new ObjectInputStream(fileInput);
-        ArrayList<Tiling> tilings = (ArrayList<Tiling>) objectInputStream.readObject();
+        ArrayList<CorrectTiling> tilings = (ArrayList<CorrectTiling>) objectInputStream.readObject();
         return tilings;
     }
 }

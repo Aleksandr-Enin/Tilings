@@ -41,7 +41,7 @@ public class CorrectTiling implements Serializable{
         for (int i = 0; i < array.length; i++) {
             t[i] = new int[array[i].length];
             for (int j = 0; j < t.length; j++) {
-                t[i][j] = (int) array[i][j];
+                t[i][j] = (int) Math.round(array[i][j]);
             }
         }
         return t;
@@ -162,15 +162,20 @@ public class CorrectTiling implements Serializable{
             //honestChangeConfiguration();
         }
         System.out.println("thermalization done") ;
+        System.out.println(this);
+        LozengePlot.saveImage(this.to3dLattice(this.lattice), "after thermalization");
         for (int k = 0; k < iterations; k++)
         {
             for (int t =0; t < 100; t++) {
                 changeConfiguration();
+                //LozengePlot.saveImage(this.to3dLattice(this.lattice), "after metropolis");
                 //honestChangeConfiguration();
             }
             sample();
         }
         finalizeSample(iterations);
+        System.out.println(this);
+        LozengePlot.saveImage(this.to3dLattice(this.lattice), "after metropolis");
     }
 
     private void initializeSample() {

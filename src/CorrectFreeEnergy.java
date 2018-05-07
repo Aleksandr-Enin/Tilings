@@ -1,10 +1,6 @@
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.ObjectOutputStream;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 
-public class FreeEnergy {
+public class CorrectFreeEnergy {
     public static void generateTilings(int n, double t, int iterations) {
         double entropy = 0;
         ArrayList<Tiling> tilings = new ArrayList<>();
@@ -57,12 +53,12 @@ public class FreeEnergy {
         return entropy;
     }
 
-    public static ArrayList<Double> freeEnergies(ArrayList<Tiling> tilings) {
+    public static ArrayList<Double> freeEnergies(ArrayList<CorrectTiling> tilings) {
         double entropy;
         ArrayList<Double> freeEnergies = new ArrayList<>();
         entropy = tilings.get(0).capacity()/(2*tilings.get(0).T);
         for (int i = 1; i < tilings.size(); i++) {
-            Tiling tiling = tilings.get(i);
+            CorrectTiling tiling = tilings.get(i);
             freeEnergies.add(tiling.averageEnergy - (tiling.T * entropy + tiling.capacity() / 2)*tiling.T / (i + 1));
             entropy += tiling.capacity() / tiling.T;
         }
