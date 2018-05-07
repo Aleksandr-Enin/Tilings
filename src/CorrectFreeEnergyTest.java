@@ -87,7 +87,7 @@ public class CorrectFreeEnergyTest {
         PrintWriter printWriter = new PrintWriter(fileWriter);
         ArrayList<Double> energies = CorrectFreeEnergy.freeEnergies(tilings);
         for (int i = 0;i < tilings.size()-1; i++) {
-            printWriter.println(tilings.get(i+1).T + " " + (energies.get(i)/(100*tilings.get(i+1).T) - CorrectFreeEnergy.realEnergy(tilings.get(i+1).T, 10) - tilings.get(0).averageEnergy/(100*0.2) + CorrectFreeEnergy.realEnergy(0.2, 10)));
+            printWriter.println(tilings.get(i+1).T + " " + (energies.get(i)/(100*tilings.get(i+1).T) - CorrectFreeEnergy.realEnergy(tilings.get(i+1).T, 10)));// - tilings.get(0).averageEnergy/(100*0.2) + CorrectFreeEnergy.realEnergy(0.2, 10)));
         }
         printWriter.close();
     }

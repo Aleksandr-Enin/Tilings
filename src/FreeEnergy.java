@@ -84,4 +84,16 @@ public class FreeEnergy {
     public static double realEnergy(double t, int n) {
         return -Math.log(partitionFunction(t, n))/(n*n);
     }
+
+    public static double realAverageEnergy(double t, int n) {
+        double energy = 0;
+        for (int i = 1; i <= n; i++) {
+            for (int j = 1; j <= n; j++) {
+                for (int k = 1; k <= n; k++) {
+                    energy += ((i + j + k - 2)*Math.exp((i + j + k - 2)/(-t))*(1-Math.exp((i+j+k-1)/(-t)))/((1 - Math.exp((i+j+k-2)/(-t)))*(1 - Math.exp((i+j+k-2)/(-t)))) - Math.exp((i+j+k-1)/(-t))*(i+j+k-1)/(1 - Math.exp((i + j + k - 2)/(-t))))/((1 - Math.exp((i+j+k-1)/(-t)))/(1 - Math.exp((i+j+k-2)/(-t))));
+                }
+            }
+        }
+        return energy;
+    }
 }
