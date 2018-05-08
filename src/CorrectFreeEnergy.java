@@ -3,10 +3,10 @@ import java.util.ArrayList;
 public class CorrectFreeEnergy {
     public static void generateTilings(int n, double t, int iterations) {
         double entropy = 0;
-        ArrayList<Tiling> tilings = new ArrayList<>();
+        ArrayList<CorrectTiling> tilings = new ArrayList<>();
         for (int i = 0; i <= iterations; i++) {
-            Tiling tiling = new Tiling(n);
-            double temperature = 0.2 + i * (t - 0.2) / iterations;
+            CorrectTiling tiling = new CorrectTiling(n);
+            double temperature = 0.01 + i * (t - 0.01) / iterations;
             tiling.setTemp(temperature);
             //System.out.println("T = " + temperature);
             //tiling.metropolis(100000);
@@ -15,10 +15,10 @@ public class CorrectFreeEnergy {
             //System.out.println(tiling.capacity());
         }
         System.out.println("initialized");
-        tilings.parallelStream().forEach(tiling -> tiling.metropolis(100000));
+        tilings.parallelStream().forEach(tiling -> tiling.metropolis(1000000));
 
-        TilingOutput.saveOutput(tilings, "");
-        TilingOutput.saveTilings(tilings, "Free Energy_" + n);
+        CorrectTilingOutput.saveOutput(tilings, "");
+        CorrectTilingOutput.saveTilingsCorrect(tilings, "Free Energy_" + n + "_correct_new");
     }
 
     public static void generateCorrectTilings(int n, double t, int iterations) {
@@ -26,7 +26,7 @@ public class CorrectFreeEnergy {
         ArrayList<CorrectTiling> tilings = new ArrayList<>();
         for (int i = 0; i <= iterations; i++) {
             CorrectTiling tiling = new CorrectTiling(n);
-            double temperature = 0.2 + i * (t - 0.2) / iterations;
+            double temperature = 0.01 + i * (t - 0.01) / iterations;
             tiling.setTemp(temperature);
             //System.out.println("T = " + temperature);
             //tiling.metropolis(100000);
@@ -56,8 +56,9 @@ public class CorrectFreeEnergy {
     public static ArrayList<Double> freeEnergies(ArrayList<CorrectTiling> tilings) {
         double entropy;
         ArrayList<Double> freeEnergies = new ArrayList<>();
-        entropy = tilings.get(0).capacity()/(2*tilings.get(0).T);
-        for (int i = 1; i < tilings.size(); i++) {
+        entropy = 0;
+        //entropy = tilings.get(0).capacity()/(2*tilings.get(0).T);
+        for (int i = 0; i < tilings.size(); i++) {
             CorrectTiling tiling = tilings.get(i);
             freeEnergies.add(tiling.averageEnergy - (tiling.T * entropy + tiling.capacity() / 2)*tiling.T / (i + 1));
             entropy += tiling.capacity() / tiling.T;

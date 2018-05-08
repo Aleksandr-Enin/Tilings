@@ -38,8 +38,8 @@ public class CorrectFreeEnergyTest {
 
     @Test
     public void freeEnergy() throws Exception {
-        for (int n = 10; n <= 10; n+=2) {
-            FreeEnergy.generateCorrectTilings(n, 2*n, 100);
+        for (int n = 4; n <= 4; n+=2) {
+            CorrectFreeEnergy.generateCorrectTilings(n, 15, 50);
             System.out.println(n);
         }
         //System.out.println(FreeEnergy.freeEnergy(4, 20, 200));
@@ -87,7 +87,7 @@ public class CorrectFreeEnergyTest {
         PrintWriter printWriter = new PrintWriter(fileWriter);
         ArrayList<Double> energies = CorrectFreeEnergy.freeEnergies(tilings);
         for (int i = 0;i < tilings.size()-1; i++) {
-            printWriter.println(tilings.get(i+1).T + " " + (energies.get(i)/(100*tilings.get(i+1).T) - CorrectFreeEnergy.realEnergy(tilings.get(i+1).T, 10)));// - tilings.get(0).averageEnergy/(100*0.2) + CorrectFreeEnergy.realEnergy(0.2, 10)));
+            printWriter.println(tilings.get(i).T + " " + (energies.get(i)/(100*tilings.get(i).T) - CorrectFreeEnergy.realEnergy(tilings.get(i).T, 10)));// - tilings.get(0).averageEnergy/(100*0.2) + CorrectFreeEnergy.realEnergy(0.2, 10)));
         }
         printWriter.close();
     }

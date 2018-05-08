@@ -10,7 +10,7 @@ public class FreeEnergy {
         ArrayList<Tiling> tilings = new ArrayList<>();
         for (int i = 0; i <= iterations; i++) {
             Tiling tiling = new Tiling(n);
-            double temperature = 0.2 + i * (t - 0.2) / iterations;
+            double temperature = 0.01 + i * (t - 0.01) / iterations;
             tiling.setTemp(temperature);
             //System.out.println("T = " + temperature);
             //tiling.metropolis(100000);
@@ -30,7 +30,7 @@ public class FreeEnergy {
         ArrayList<CorrectTiling> tilings = new ArrayList<>();
         for (int i = 0; i <= iterations; i++) {
             CorrectTiling tiling = new CorrectTiling(n);
-            double temperature = 0.2 + i * (t - 0.2) / iterations;
+            double temperature = 0.01 + i * (t - 0.01) / iterations;
             tiling.setTemp(temperature);
             //System.out.println("T = " + temperature);
             //tiling.metropolis(100000);

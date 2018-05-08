@@ -110,15 +110,15 @@ public class Tiling implements Serializable{
     {
         int i, j;
         initializeSample();
-        for (int t =0; t < n*n*n*100; t++) {
+        for (int t =0; t < n*n*n*10000; t++) {
             changeConfiguration();
         }
         System.out.println("thermalization done") ;
         for (int k = 0; k < iterations; k++)
         {
-            for (int t =0; t < 100; t++) {
+            //for (int t =0; t < 100; t++) {
                 changeConfiguration();
-            }
+            //}
             sample();
         }
         finalizeSample(iterations);

@@ -123,15 +123,18 @@ public class CorrectTiling implements Serializable{
         int heightDifference = 0;
         int i = 0;
         int j = 0;
+        if (random.nextDouble() <= 1.0/(flippable + 1)) return;
         do {
             heightDifference = (random.nextBoolean() ? 1 : -1);
             i = random.nextInt(2*n+1);
             j = random.nextInt(2*n+1);
         } while (!isCorrectChange(i,j,heightDifference));
+        //if (!isCorrectChange(i, j, heightDifference)) return;
         int locallyFlippable = locallyFlippabe(i,j,0);
         int newFlippable = locallyFlippabe(i,j,heightDifference) - locallyFlippable + flippable;
 
-        if (random.nextDouble() < newFlippable*Math.exp(-heightDifference/T)/flippable) {
+        if (random.nextDouble() < (flippable+1)*Math.exp(-heightDifference/T)/(newFlippable+1)) {
+        //if (random.nextDouble() < Math.exp(-heightDifference/T)) {
             lattice[i][j]+= heightDifference;
             energy += heightDifference;
             flippable = newFlippable;
@@ -157,25 +160,25 @@ public class CorrectTiling implements Serializable{
         int i, j;
         initializeSample();
         flippable = 1;
-        for (int t =0; t < n*n*n*100; t++) {
+        for (int t =0; t < n*n*n*100000; t++) {
             changeConfiguration();
             //honestChangeConfiguration();
         }
         System.out.println("thermalization done") ;
-        System.out.println(this);
-        LozengePlot.saveImage(this.to3dLattice(this.lattice), "after thermalization");
+//        System.out.println(this);
+//        LozengePlot.saveImage(this.to3dLattice(this.lattice), "after thermalization");
         for (int k = 0; k < iterations; k++)
         {
-            for (int t =0; t < 100; t++) {
-                changeConfiguration();
+            //for (int t =0; t < 100; t++) {
+            changeConfiguration();
                 //LozengePlot.saveImage(this.to3dLattice(this.lattice), "after metropolis");
                 //honestChangeConfiguration();
-            }
+            //.}
             sample();
         }
         finalizeSample(iterations);
-        System.out.println(this);
-        LozengePlot.saveImage(this.to3dLattice(this.lattice), "after metropolis");
+        //System.out.println(this);
+        //LozengePlot.saveImage(this.to3dLattice(this.lattice), "after metropolis");
     }
 
     private void initializeSample() {

@@ -41,8 +41,8 @@ public class FreeEnergyTest {
 
     @Test
     public void freeEnergy() throws Exception {
-        for (int n = 10; n <= 10; n+=2) {
-            FreeEnergy.generateTilings(n, 2*n, 100);
+        for (int n = 4; n <= 4; n+=2) {
+            CorrectFreeEnergy.generateTilings(n, 5, 100);
             System.out.println(n);
         }
         //System.out.println(FreeEnergy.freeEnergy(4, 20, 200));
@@ -60,7 +60,7 @@ public class FreeEnergyTest {
             PrintWriter printWriter = new PrintWriter(fileWriter);
             for (int k = 0; k < FreeEnergies.size(); k++) {
                 printWriter.println(tilings.get(k+1).T + " " + FreeEnergies.get(k)/(n*n));
-                if (Math.abs(tilings.get(k+1).T - 0.4*n) < 0.2) {
+                if (Math.abs(tilings.get(k+1).T - n) < 0.2) {
                     System.out.println(n);
                     scalingPrintWriter.println(1.0/n + " " + FreeEnergies.get(k)/(-tilings.get(k+1).T*n*n));
                 }
@@ -85,7 +85,7 @@ public class FreeEnergyTest {
 
     @Test
     public void generateFreeEnergy() throws Exception {
-        for (int n = 4; n <= 42; n+=2) {
+        for (int n = 4; n <= 4; n+=2) {
             //int n = 40;
             if (n==10) continue;
             ArrayList<Tiling> tilings = TilingOutput.readTilings("Free Energy_" + n);
@@ -94,7 +94,24 @@ public class FreeEnergyTest {
             ArrayList<Double> energies = FreeEnergy.freeEnergies(tilings);
             System.out.println(FreeEnergy.realEnergy(0.2, n));
             for (int i = 0; i < tilings.size() - 1; i++) {
-                printWriter.println(tilings.get(i + 1).T + " " + (energies.get(i) / (n * n * tilings.get(i + 1).T) - FreeEnergy.realEnergy(tilings.get(i + 1).T, n)));// - 100*FreeEnergy.realEnergy(0.2, 10)/0.2));//0.038));
+                printWriter.println(tilings.get(i + 1).T + " " + tilings.get(i+1).averageEnergy + " " + tilings.get(i+1).averageEnergySquared +" " + tilings.get(i+1).capacity() + " "+ energies.get(i)/(n*n*tilings.get(i+1).T) +  " " + FreeEnergy.realEnergy(tilings.get(i+1).T, n) + " " + (energies.get(i) / (n * n * tilings.get(i + 1).T) - FreeEnergy.realEnergy(tilings.get(i + 1).T, n)));// - 100*FreeEnergy.realEnergy(0.2, 10)/0.2));//0.038));
+            }
+            printWriter.close();
+        }
+    }
+
+    @Test
+    public void generateCorrectFreeEnergy() throws Exception {
+        for (int n = 4; n <= 4; n+=2) {
+            //int n = 40;
+            if (n==10) continue;
+            ArrayList<CorrectTiling> tilings = CorrectTilingOutput.readTilings("Free Energy_" + n+"_correct_new");
+            FileWriter fileWriter = new FileWriter("energy/Free Energy_" + n + "_correct_new.dat");
+            PrintWriter printWriter = new PrintWriter(fileWriter);
+            ArrayList<Double> energies = CorrectFreeEnergy.freeEnergies(tilings);
+            System.out.println(FreeEnergy.realEnergy(0.2, n));
+            for (int i = 0; i < tilings.size(); i++) {
+                printWriter.println(tilings.get(i).T + " " + tilings.get(i).averageEnergy + " " + tilings.get(i).averageEnergySquared + " " + tilings.get(i).capacity() + " " + energies.get(i)/(n*n*tilings.get(i).T) + " " + FreeEnergy.realEnergy(tilings.get(i).T, n) + " " + (energies.get(i) / (n * n * tilings.get(i).T) - FreeEnergy.realEnergy(tilings.get(i).T, n)));// - 100*FreeEnergy.realEnergy(0.2, 10)/0.2));//0.038));
             }
             printWriter.close();
         }
