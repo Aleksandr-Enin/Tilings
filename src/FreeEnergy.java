@@ -42,7 +42,7 @@ public class FreeEnergy {
         tilings.parallelStream().forEach(tiling -> tiling.metropolis(100000));
 
         CorrectTilingOutput.saveOutput(tilings, "");
-        CorrectTilingOutput.saveTilingsCorrect(tilings, "Free Energy_" + n);
+        CorrectTilingOutput.saveTilings(tilings, "Free Energy_" + n);
     }
 
     public static ArrayList<Double> entropy(ArrayList<Tiling> tilings) {

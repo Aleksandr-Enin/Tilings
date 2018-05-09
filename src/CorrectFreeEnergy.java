@@ -18,7 +18,7 @@ public class CorrectFreeEnergy {
         tilings.parallelStream().forEach(tiling -> tiling.metropolis(10000000));
 
         CorrectTilingOutput.saveOutput(tilings, "");
-        CorrectTilingOutput.saveTilingsCorrect(tilings, "Free Energy_" + n + "_correct");
+        CorrectTilingOutput.saveTilings(tilings, "Free Energy_" + n + "_correct");
     }
 
 /*    public static void generateCorrectTilings(int n, double t, int iterations) {

@@ -23,8 +23,9 @@ class MyRunnable implements Runnable {
 
 public class Main {
     public static void main(String[] args) throws Exception{
+        final int NTHREADS = 4;
         int iterations = 300;
-        for (int n = 20; n <= 42; n+=2) {
+        for (int n = 4; n <= 42; n+=2) {
             double t = 3*n;
             ArrayList<CorrectTiling> tilings = new ArrayList<>();
             for (int i = 0; i <= iterations; i++) {
@@ -34,7 +35,7 @@ public class Main {
                 tilings.add(tiling);
             }
 
-            ExecutorService executor = Executors.newFixedThreadPool(6);
+            ExecutorService executor = Executors.newFixedThreadPool(NTHREADS);
             for (CorrectTiling tiling: tilings) {
                 Runnable worker = new MyRunnable(tiling);
                 executor.execute(worker);
@@ -43,6 +44,7 @@ public class Main {
             executor.shutdown();
 
             executor.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
+            System.out.println(n + " comlepeted");
             CorrectTilingOutput.saveTilings(tilings, "Free Energy_" + n + "_correct");
 
         }
