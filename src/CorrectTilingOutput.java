@@ -23,20 +23,7 @@ public class CorrectTilingOutput {
         }
     }
 
-    public static void saveTilings(ArrayList<Tiling> tilings, String filename) {
-        try {
-            FileOutputStream fos = new FileOutputStream(filename);
-            ObjectOutputStream oos = new ObjectOutputStream(fos);
-            oos.writeObject(tilings);
-            oos.close();
-            fos.close();
-        }
-        catch(Exception ex) {
-
-        }
-    }
-
-    public static void saveTilingsCorrect(ArrayList<CorrectTiling> tilings, String filename) {
+    public static void saveTilings(ArrayList<CorrectTiling> tilings, String filename) {
         try {
             FileOutputStream fos = new FileOutputStream(filename);
             ObjectOutputStream oos = new ObjectOutputStream(fos);

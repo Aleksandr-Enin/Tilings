@@ -15,13 +15,13 @@ public class CorrectFreeEnergy {
             //System.out.println(tiling.capacity());
         }
         System.out.println("initialized");
-        tilings.parallelStream().forEach(tiling -> tiling.metropolis(1000000));
+        tilings.parallelStream().forEach(tiling -> tiling.metropolis(10000000));
 
         CorrectTilingOutput.saveOutput(tilings, "");
-        CorrectTilingOutput.saveTilingsCorrect(tilings, "Free Energy_" + n + "_correct_new");
+        CorrectTilingOutput.saveTilingsCorrect(tilings, "Free Energy_" + n + "_correct");
     }
 
-    public static void generateCorrectTilings(int n, double t, int iterations) {
+/*    public static void generateCorrectTilings(int n, double t, int iterations) {
         double entropy = 0;
         ArrayList<CorrectTiling> tilings = new ArrayList<>();
         for (int i = 0; i <= iterations; i++) {
@@ -39,7 +39,7 @@ public class CorrectFreeEnergy {
 
         CorrectTilingOutput.saveOutput(tilings, "");
         CorrectTilingOutput.saveTilingsCorrect(tilings, "Free Energy_" + n);
-    }
+    }*/
 
     public static ArrayList<Double> entropy(ArrayList<Tiling> tilings) {
         double e;

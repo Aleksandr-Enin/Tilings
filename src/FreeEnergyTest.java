@@ -41,8 +41,8 @@ public class FreeEnergyTest {
 
     @Test
     public void freeEnergy() throws Exception {
-        for (int n = 4; n <= 4; n+=2) {
-            CorrectFreeEnergy.generateTilings(n, 5, 100);
+        for (int n = 4; n <= 42; n+=2) {
+            CorrectFreeEnergy.generateTilings(n, 2*n, 200);
             System.out.println(n);
         }
         //System.out.println(FreeEnergy.freeEnergy(4, 20, 200));

@@ -94,12 +94,12 @@ public class CorrectTiling implements Serializable{
         }
     }
 
-    ArrayList<int[]> generateFlippable() {
+    ArrayList<int[]> updateFlippable(int i, int j, int heightDifference) {
         ArrayList<int[]> result = new ArrayList<>();
-        for (int i = 0; i < 2*n+1; i++) {
-            for (int j = 0; j < 2*n+1; j++) {
-                if (isCorrectChange(i, j, 1)) result.add(new int[] {i,j,1});
-                if (isCorrectChange(i, j, -1)) result.add(new int[] {i,j,-1});
+        for (int l = -2; l<=2; l++) {
+            for (int m = -2; m <=2; m++) {
+                if (isCorrectChange(i+l, j+m, 1)) result.add(new int[] {i,j,1});
+                if (isCorrectChange(i+l, j+m, -1)) result.add(new int[] {i,j,-1});
             }
         }
         return result;
@@ -141,7 +141,7 @@ public class CorrectTiling implements Serializable{
         }
     }
 
-    void honestChangeConfiguration()
+/*    void honestChangeConfiguration()
     {
         ArrayList<int[]> flippable = generateFlippable();
         int [] state = flippable.get(random.nextInt(flippable.size()));
@@ -153,7 +153,7 @@ public class CorrectTiling implements Serializable{
         else {
             lattice[state[0]][state[1]]-= state[2];
         }
-    }
+    }*/
 
     public void metropolis(int iterations)
     {
@@ -164,7 +164,7 @@ public class CorrectTiling implements Serializable{
             changeConfiguration();
             //honestChangeConfiguration();
         }
-        System.out.println("thermalization done") ;
+        //System.out.println("thermalization done") ;
 //        System.out.println(this);
 //        LozengePlot.saveImage(this.to3dLattice(this.lattice), "after thermalization");
         for (int k = 0; k < iterations; k++)

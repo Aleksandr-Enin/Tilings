@@ -39,7 +39,7 @@ public class CorrectFreeEnergyTest {
     @Test
     public void freeEnergy() throws Exception {
         for (int n = 4; n <= 4; n+=2) {
-            CorrectFreeEnergy.generateCorrectTilings(n, 15, 50);
+            //CorrectFreeEnergy.generateCorrectTilings(n, 15, 50);
             System.out.println(n);
         }
         //System.out.println(FreeEnergy.freeEnergy(4, 20, 200));
