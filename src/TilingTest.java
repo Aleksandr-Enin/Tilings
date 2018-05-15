@@ -4,18 +4,16 @@ import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 
-import static org.junit.Assert.*;
-
 public class TilingTest {
     @org.junit.Test
     public void metropolis() throws Exception {
         int n = 10;
         int m = n;
         CorrectTiling tiling = new CorrectTiling(n);
-        tiling.setTemp(10000);
+        tiling.setTemp(1000000);
         LozengePlot.saveImage(tiling.to3dLattice(tiling.lattice), "initial");
         System.out.println(tiling);
-        tiling.metropolis(100000);
+        tiling.metropolis(1000000);
         int[][] t = tiling.to3dLattice(tiling.getAverageConfiguration());
         LozengePlot.saveImage(tiling.to3dLattice(tiling.getAverageConfiguration()), "final");
         System.out.println(tiling);
@@ -75,6 +73,61 @@ public class TilingTest {
         }
         energyWriter.close();
 
+    }
+
+    @Test
+    public void noncubicTest() throws Exception {
+        int n = 9;
+        NonCubeTiling tiling = new NonCubeTiling(n);
+        tiling.setTemp(100);
+        LozengePlot.saveImage(tiling.to3dLattice(tiling.lattice), "cardioid_initial");
+        tiling.metropolis(100000);
+        LozengePlot.saveImage(tiling.to3dLattice(tiling.getAverageConfiguration()), "noncube");
+        for (int i = n/4; i < (3*tiling.n)/4; i++) {
+            for (int j = n/4; j < (3*n)/4; j++) {
+                System.out.print(tiling.correlators[i][j] + " ");
+            }
+            System.out.println();
+        }
+
+    }
+
+    @Test
+    public void generateCorrelators() throws Exception{
+        int n = 40;
+//        ArrayList<CorrectTiling> tilings = CorrectTilingOutput.readTilings("Correct_Results/Free Energy_" + n + "_correct");
+//        for (CorrectTiling tiling: tilings) {
+        CorrectTiling tiling = new CorrectTiling(n);
+        tiling.setTemp(30);
+        System.out.println(tiling);
+        LozengePlot.saveImage(tiling.to3dLattice(tiling.lattice), "initial_empty");
+        tiling.metropolis(10000000);
+        {
+            FileWriter fileWriter = new FileWriter("Correct_results/correlators/" + tiling.n + "_" + "unfiform_" + "Corelators_uni.dat");
+            PrintWriter printWriter = new PrintWriter(fileWriter);
+            for (int i = (2*n+1)/4; i < 3*(2*n+1)/4; i++) {
+                for (int j = (2*n+1)/4; j < 3*(2*n+1)/4; j++) {
+                    printWriter.print(tiling.correlators[i][j] +" ");
+                }
+                printWriter.println();
+            }
+            printWriter.close();
+
+            fileWriter = new FileWriter("Correct_results/correlators/" + tiling.n + "_" + "uniform_" + "Diagonal_Corelators.dat");
+            printWriter = new PrintWriter(fileWriter);
+
+
+            for (int i = (2*n+1)/4; i < 3*(2*n+1)/4; i++) {
+                printWriter.println(i + " "+ tiling.correlators[i][n]);
+            }
+            printWriter.close();
+        }
+        LozengePlot.saveImage(tiling.to3dLattice(tiling.getAverageConfiguration()), "final_uniform");
+    }
+
+    @Test
+    public void asdasd() throws Exception{
+        System.out.println(FreeEnergy.partitionFunction(30, 40));
     }
 
 }

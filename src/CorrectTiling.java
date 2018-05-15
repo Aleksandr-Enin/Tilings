@@ -14,6 +14,8 @@ public class CorrectTiling implements Serializable{
     double averageEnergySquared = 0;
     int flippable = 0;
 
+    static final long serialVersionUID = 8975119023001558450L;
+
     Random random;
 
     public int[][] getAverageConfiguration() {
@@ -90,17 +92,41 @@ public class CorrectTiling implements Serializable{
                 lattice[j + i][n + i] = i;
             }
         }
-    }
 
-    ArrayList<int[]> updateFlippable(int i, int j, int heightDifference) {
-        ArrayList<int[]> result = new ArrayList<>();
-        for (int l = -2; l<=2; l++) {
-            for (int m = -2; m <=2; m++) {
-                if (isCorrectChange(i+l, j+m, 1)) result.add(new int[] {i,j,1});
-                if (isCorrectChange(i+l, j+m, -1)) result.add(new int[] {i,j,-1});
+        for (int h = n; h > 0; h--) {
+            for (int i = n-h; i>=0; i--) {
+                for (int j = 1; j <=h; j++) {
+                        lattice[n - i + j - 1][h + i + j - 1] = j;
+                        energy++;
+                }
             }
         }
-        return result;
+    }
+
+    void initializeLinearLattice()
+    {
+        for (int i = 0; i <= n; i++) {
+            for (int j =0; j<= n; j++) {
+                lattice[i][j] = 0;
+            }
+        }
+        for (int i = 0; i<=n; i++) {
+            for (int j = 0; j<=n; j++) {
+                lattice[n + i][j + i] = i;
+                lattice[j + i][n + i] = i;
+            }
+        }
+    }
+
+    int countFlippable() {
+        int count = 0;
+        for (int l = 0; l<=2*n ; l++) {
+            for (int m = 0; m <=2*n; m++) {
+                if (isCorrectChange(l, m, 1)) count++;
+                if (isCorrectChange(l, m, -1)) count++;
+            }
+        }
+        return count;
     }
 
     int locallyFlippabe(int i, int j, int heightDifference) {
@@ -130,8 +156,8 @@ public class CorrectTiling implements Serializable{
         //if (!isCorrectChange(i, j, heightDifference)) return;
         int locallyFlippable = locallyFlippabe(i,j,0);
         int newFlippable = locallyFlippabe(i,j,heightDifference) - locallyFlippable + flippable;
-
         if (random.nextDouble() < (flippable+1)*Math.exp(-heightDifference/T)/(newFlippable+1)) {
+        //if (random.nextDouble() < (flippable+1)/((double) (newFlippable+1))) {
         //if (random.nextDouble() < Math.exp(-heightDifference/T)) {
             lattice[i][j]+= heightDifference;
             energy += heightDifference;
@@ -157,21 +183,22 @@ public class CorrectTiling implements Serializable{
     {
         int i, j;
         initializeSample();
-        flippable = 1;
-        for (int t =0; t < n*n*n*100000; t++) {
+        flippable = countFlippable();
+        for (int t =0; t < 10000000; t++) {
             changeConfiguration();
             //honestChangeConfiguration();
         }
-        //System.out.println("thermalization done") ;
+        System.out.println("thermalization done") ;
 //        System.out.println(this);
-//        LozengePlot.saveImage(this.to3dLattice(this.lattice), "after thermalization");
+        LozengePlot.saveImage(this.to3dLattice(this.lattice), "after thermalization");
         for (int k = 0; k < iterations; k++)
         {
-            //for (int t =0; t < 100; t++) {
+            for (int t =0; t < 100; t++) {
             changeConfiguration();
                 //LozengePlot.saveImage(this.to3dLattice(this.lattice), "after metropolis");
                 //honestChangeConfiguration();
-            //.}
+            }
+            //update();
             sample();
         }
         finalizeSample(iterations);
@@ -180,7 +207,7 @@ public class CorrectTiling implements Serializable{
     }
 
     private void initializeSample() {
-        energy = 0;
+        averageEnergy = 0;
         averageConfiguration = new double[2*n+1][2*n+1];
         correlators = new double[2*n+1][2*n+1];
     }
