@@ -52,7 +52,7 @@ public class FreeEnergyTest {
     public void freeEnergyAll() throws Exception {
         FileWriter scalingFileWriter = new FileWriter("scaling.dat");
         PrintWriter scalingPrintWriter = new PrintWriter(scalingFileWriter);
-        for (int n = 4; n <= 20; n+=2) {
+        for (int n = 4; n <= 22; n+=2) {
             ArrayList<CorrectTiling> tilings = CorrectTilingOutput.readTilings("Correct_Results/Free_Energy_"+n + "_correct");
             ArrayList<Double> FreeEnergies = CorrectFreeEnergy.freeEnergies(tilings);
             //System.out.println(n);
@@ -62,17 +62,17 @@ public class FreeEnergyTest {
             int x = 0;
             for (int k = 0; k < FreeEnergies.size(); k++) {
                 //printWriter.println(tilings.get(k+1).T + " " + FreeEnergies.get(k)/(n*n));
-                if (Math.abs(3*tilings.get(k).T - n) < 0.2) {
+                if (Math.abs(5*tilings.get(k).T/2 - n) < 0.2) {
                     System.out.println(n);
-                    if (dist > Math.abs(3*tilings.get(k).T - n)) {
-                        dist = Math.abs(3*tilings.get(k).T - n);
+                    if (dist > Math.abs(5*tilings.get(k).T/2 - n)) {
+                        dist = Math.abs(5*tilings.get(k).T/2 - n);
                         x = k;
                     }
                 }
 
 
             }
-            scalingPrintWriter.println(1.0/n + " " + FreeEnergies.get(x)/(-tilings.get(x).T*n*n) + " " + CorrectFreeEnergy.realEnergy(tilings.get(x).T, n));
+            scalingPrintWriter.println(1.0/n + " " + FreeEnergies.get(x)/(n*n) + " " + tilings.get(x).T*CorrectFreeEnergy.realEnergy(tilings.get(x).T, n));
             //printWriter.close();
         }
         scalingPrintWriter.close();
@@ -110,7 +110,7 @@ public class FreeEnergyTest {
 
     @Test
     public void generateCorrectFreeEnergy() throws Exception {
-        for (int n = 20; n <= 20; n+=2) {
+        for (int n = 20; n <= 22; n+=2) {
             //int n = 40;
             //if (n!=12) continue;
             ArrayList<CorrectTiling> tilings = CorrectTilingOutput.readTilings("Correct_Results/Free_Energy_" + n+"_correct");
