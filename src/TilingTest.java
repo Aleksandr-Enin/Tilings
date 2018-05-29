@@ -4,6 +4,7 @@ import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 
 public class TilingTest {
@@ -136,8 +137,46 @@ public class TilingTest {
     }
 
     @Test
-    public void asdasd() throws Exception{
-        System.out.println(FreeEnergy.partitionFunction(30, 40));
+    public void fixedPointTiling() throws Exception{
+        int n = 18;
+        double iterations = 100;
+        ArrayList<FixedPointsTiling> tilings = new ArrayList<>();
+        //FixedPointsTiling tiling = new FixedPointsTiling(n, 2*n/3, n, n);
+        for (double t = 0.01; t <= n; t+=n/iterations) {
+            FixedPointsTiling tiling = new FixedPointsTiling(n, 2*n/3, n, n);
+            tiling.setTemp(t);
+            tilings.add(tiling);
+        }
+        tilings.parallelStream().forEach(tiling -> tiling.metropolis(100000));
+
+        ArrayList<CorrectTiling> outputTilings = new ArrayList<>();
+        for (FixedPointsTiling tiling: tilings) {
+            outputTilings.add(tiling);
+        }
+        CorrectTilingOutput.saveTilings(outputTilings, "fixed_point");
     }
 
+    @Test
+    public void constrainedTiling() throws Exception{
+        int n = 16;
+        double iterations = 300;
+        ArrayList<CorrectTiling> tilings = new ArrayList<>();
+        for (double t = 0.01; t <= n; t+=n/iterations) {
+            NonCubeTiling tiling = new NonCubeTiling(n);
+            tiling.setTemp(t);
+            tilings.add(tiling);
+        }
+        tilings.parallelStream().forEach(tiling -> tiling.metropolis(1000000));
+
+        CorrectTilingOutput.saveTilings(tilings, "cardioid");
+    }
+
+    @Test
+    public void generateImage() throws Exception{
+        int n = 20;
+        CorrectTiling tiling = new CorrectTiling(n);
+        tiling.setTemp(10000);
+        tiling.metropolis(100000);
+        LozengePlot.saveImage(tiling.to3dLattice(tiling.getAverageConfiguration()), "small");
+    }
 }
